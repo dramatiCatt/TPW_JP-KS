@@ -7,8 +7,8 @@ namespace Logic
         private Random creator = new Random();
         private int x;
         private int y;
-        private int radius = 10;
-        private float speed = 1f;
+        public int radius = 10;
+        public float speed = 1f;
 
         public Creator() { }
 

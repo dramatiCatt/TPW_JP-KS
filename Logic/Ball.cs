@@ -6,10 +6,10 @@ namespace Logic
 {
     public class Ball : INotifyPropertyChanged
     {
-        private Vector2 currentVector;
-        private Vector2 whereVector;
-        private float speed;
-        private int radius;
+        public Vector2 currentVector;
+        public Vector2 whereVector;
+        public float speed;
+        public int radius;
 
 
         public Ball(Vector2 vector)

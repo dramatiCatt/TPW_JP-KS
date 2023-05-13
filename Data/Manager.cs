@@ -76,7 +76,7 @@ namespace Data
                         lock(locked)
                         {
                             ball.UpdatePosition();
-                            while (ball.canMove == false) { }
+                            while (ball.CanMove == false) { }
                         }
                         ball.UpdatePosition();
                         try { token.ThrowIfCancellationRequested(); }

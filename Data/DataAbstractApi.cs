@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Collections.ObjectModel;
 using System.Text;
 
 namespace Data
@@ -11,10 +12,10 @@ namespace Data
         {
             return new DataApi();
         }
-        public abstract void createBalls(int num);
+        public abstract void create(int num);
         public abstract void stop();
         public abstract Manager GetManager();
-        public abstract ObservableCollection<Ball> GetBalls();
+        public abstract ObservableCollection<Ball> GetBall();
         public abstract int Width { get; }
         public abstract int Height { get; }
     }
@@ -27,7 +28,7 @@ namespace Data
         public override void create(int num)
         {
             manager = new Manager();
-            manger.create(num);
+            manager.create(num);
         }
         public override void stop()
         {
@@ -36,11 +37,11 @@ namespace Data
                 manager.stop();
             }
         }
-        public override Manager GetManger()
+        public override Manager GetManager()
         {
             return manager;
         }
-        public override ObservableCollection<Ball> GetBalls()
+        public override ObservableCollection<Ball> GetBall()
         {
             return manager.Balls;
         }

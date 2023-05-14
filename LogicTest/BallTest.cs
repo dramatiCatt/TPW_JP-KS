@@ -14,7 +14,7 @@ namespace LogicTest
         [Test]
         public void BallConstructor()
         {
-            Ball ball = new Ball(2, 1, 3, 7);
+            LogicBall ball = new LogicBall(2, 1, 3, 7);
             Assert.True(ball.currentVector.X == 2);
             Assert.True(ball.currentVector.Y == 1);
 
@@ -30,22 +30,22 @@ namespace LogicTest
         [Test]
         public void GenerateDestinationTest()
         {
-            Ball ball = new Ball(2, 33, 3, 7);
+            LogicBall ball = new LogicBall(2, 33, 3, 7);
             ball.createNewVectorDestination();
             Assert.True(ball.whereVector.X > 2 && ball.whereVector.Y >= 2 && ball.whereVector.Y <= Manager.height - 2
                 && ball.whereVector.X <= Manager.width - 2);
             
-            Ball ball2 = new Ball(33, 1, 5, 2);
+            LogicBall ball2 = new LogicBall(33, 1, 5, 2);
             ball2.createNewVectorDestination();
             Assert.True(ball2.whereVector.X >= 1 && ball2.whereVector.Y > 1 && ball2.whereVector.Y <= Manager.height - 1
                 && ball2.whereVector.X <= Manager.width - 1);
             
-            Ball ball3 = new Ball(Manager.width - 5, 33, 5, 2);
+            LogicBall ball3 = new LogicBall(Manager.width - 5, 33, 5, 2);
             ball3.createNewVectorDestination();
             Assert.True(ball3.whereVector.X >= 5 && ball3.whereVector.Y >= 5 && ball3.whereVector.Y <= Manager.height - 5
                 && ball3.whereVector.X < Manager.width - 5);
             
-            Ball ball4 = new Ball(33, Manager.height - 5, 5, 2);
+            LogicBall ball4 = new LogicBall(33, Manager.height - 5, 5, 2);
             ball4.createNewVectorDestination();
             Assert.True(ball4.whereVector.X >= 5 && ball4.whereVector.Y >= 5 && ball4.whereVector.Y < Manager.height - 5
                 && ball4.whereVector.X <= Manager.width - 5);
@@ -55,7 +55,7 @@ namespace LogicTest
         [Test]
         public void UpdatePositionTest()
         {
-            Ball ball = new Ball(2, 10, 6, 2);
+            LogicBall ball = new LogicBall(2, 10, 6, 2);
             Vector2 first = ball.currentVector;
             Vector2 second = new Vector2(20, 10);
             ball.whereVector = second;

@@ -11,7 +11,7 @@ namespace TP.ConcurrentProgramming.PresentationModel
     {
         public abstract int Height { get; } 
         public abstract int Width { get; }
-        public abstract ObservableCollection<Ball> create(int num);
+        public abstract ObservableCollection<LogicBall> create(int num);
         public abstract void stop();
         public abstract void moving();
         public static ModelAbstractApi CreateApi()
@@ -26,7 +26,7 @@ namespace TP.ConcurrentProgramming.PresentationModel
         public override int Width => Manager.width;
         public override int Height => Manager.height;
         public override void moving() => manager.moving();
-        public override ObservableCollection<Ball> create(int num)
+        public override ObservableCollection<LogicBall> create(int num)
         {
             manager.create(num);
             return manager.Balls;

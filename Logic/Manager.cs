@@ -11,7 +11,7 @@ namespace Logic
         public static int width = 800;
         public static int height = 400;
         private Creator creator = new Creator();
-        private ObservableCollection<Ball> balls = new ObservableCollection<Ball>();
+        private ObservableCollection<LogicBall> balls = new ObservableCollection<LogicBall>();
         private List<Task> tasks = new List<Task>();
         CancellationTokenSource tokenSource;
         CancellationToken token;
@@ -20,12 +20,12 @@ namespace Logic
         {
         }
 
-        public void add(Ball ball)
+        public void add(LogicBall ball)
         {
             balls.Add(ball);
         }
 
-        public void remove(Ball ball)
+        public void remove(LogicBall ball)
         {
             balls.Remove(ball);
         }
@@ -38,7 +38,7 @@ namespace Logic
                 token = tokenSource.Token;
                 for (int i = 0; i < num; i++)
                 {
-                    Ball ball = creator.CreateBall();
+                    LogicBall ball = creator.CreateBall();
                     add(ball);
                 }
             }
@@ -57,7 +57,7 @@ namespace Logic
 
         public void moving()
         {
-            foreach (Ball ball in balls)
+            foreach (LogicBall ball in balls)
             {
                 Task task = Task.Run(() =>
                 {
@@ -78,7 +78,7 @@ namespace Logic
             get => creator;
         }
 
-        public ObservableCollection<Ball> Balls
+        public ObservableCollection<LogicBall> Balls
         {
             get => balls;
         }

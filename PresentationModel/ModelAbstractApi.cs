@@ -1,38 +1,50 @@
-﻿using System.Numerics;
-using Logic;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Collections;
+﻿using Logic;
 using System.Collections.ObjectModel;
+
 
 namespace TP.ConcurrentProgramming.PresentationModel
 {
     public abstract class ModelAbstractApi
     {
-        public abstract int Height { get; } 
-        public abstract int Width { get; }
-        public abstract ObservableCollection<LogicBall> create(int num);
+        private ObservableCollection<BallModel> ballsModel = new ObservableCollection<BallModel>();
+        public static ModelAbstractApi CreateAPI(LogicAbstractApi logicApi = default)
+        {
+            return new ModelLayer(logicApi ?? LogicAbstractApi.CreateApi());
+        }
+        public abstract ObservableCollection<BallModel> create(int num);
         public abstract void stop();
-        public abstract void moving();
-        public static ModelAbstractApi CreateApi()
+        public abstract int Height { get; }
+        public abstract int Width { get; }
+        public ObservableCollection<BallModel> BallsModel
         {
-            return new ModelApi();
-        }
-    }
-
-    internal class ModelApi : ModelAbstractApi
-    {
-        private readonly Manager manager = new Manager();
-        public override int Width => Manager.width;
-        public override int Height => Manager.height;
-        public override void moving() => manager.moving();
-        public override ObservableCollection<LogicBall> create(int num)
-        {
-            manager.create(num);
-            return manager.Balls;
+            get => ballsModel;
+            set => ballsModel = value;
         }
 
-        public override void stop() => manager.stop();
-
+        internal class ModelLayer : ModelAbstractApi
+        {
+            private readonly LogicAbstractApi logic;
+            public ModelLayer(LogicAbstractApi logicLayer)
+            {
+                logic = logicLayer;
+            }
+            public override int Width => logic.Width;
+            public override int Height => logic.Height;
+            public override ObservableCollection<BallModel> create(int num)
+            {
+                logic.CreateBalls(number);
+                ballsModel.Clear();
+                foreach (BallLogic ball in logic.GetBalls())
+                {
+                    ballsModel.Add(new BallModel(ball));
+                }
+                return ballsModel;
+            }
+            public override void stop()
+            {
+                logic.stop();
+                ballsModel.Clear();
+            }
+        }
     }
 }

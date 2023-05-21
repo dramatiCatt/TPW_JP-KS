@@ -5,6 +5,8 @@ using System.Diagnostics;
 using System.Windows.Input;
 using TP.ConcurrentProgramming.PresentationModel;
 using TP.ConcurrentProgramming.PresentationViewModel;
+using System.Runtime.CompilerServices;
+using System.ComponentModel;
 
 namespace TP.ConcurrentProgramming.PresentationViewModel
 {
@@ -21,7 +23,7 @@ namespace TP.ConcurrentProgramming.PresentationViewModel
 
         public MainWindowVM()
         {
-            model = ModelAbstractApi.CreateAPI();
+            model = ModelAbstractApi.CreateApi();
             StartClick = new RelayCommand(() => create());
             StopClick = new RelayCommand(() => stop());
             _height = model.Height + 4;

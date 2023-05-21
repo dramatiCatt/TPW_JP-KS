@@ -38,7 +38,6 @@ namespace TP.ConcurrentProgramming.PresentationViewModel
         private void create()
         {
             ModelLayer.create(num);
-            ModelLayer.moving();
         }
 
         public ICommand StopClick { get; set; }

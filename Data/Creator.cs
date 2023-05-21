@@ -19,7 +19,7 @@ namespace Data
             {
                 float X = creator.Next(2 + radius, width - radius - 2);
                 float Y = creator.Next(2 + radius, height - radius - 2);
-                float mass = (float)creator.NextDouble() * 2;
+                float weight = (float)creator.NextDouble() * 2;
                 float velX = (float)creator.NextDouble() * (3 + 3) - 3;
                 float velY = (float)creator.NextDouble() * (3 + 3) - 3;
                 if (velX > -1 && velX < 0)
@@ -39,7 +39,7 @@ namespace Data
                     velY = 1;
                 }
                 Vector2 velocity = new Vector2(velX, velY);
-                return new Ball(X, Y, Radius, mass, velocity);
+                return new Ball(X, Y, Radius, weight, velocity);
             }
 
             public int X

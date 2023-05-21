@@ -30,7 +30,7 @@ namespace TP.ConcurrentProgramming.PresentationModel
 			get => xPos;
 			set
 			{
-				xPosition = value;
+				xPos = value;
 				RaisePropertyChanged("XPos");
 			}
 		}
@@ -53,7 +53,7 @@ namespace TP.ConcurrentProgramming.PresentationModel
 		}
 		private void BallPropertyChanged(object sender, PropertyChangedEventArgs e)
 		{
-			BallLogic b = (BallLogic)sender;
+			LogicBall b = (LogicBall)sender;
 
 			XPos = b.X;
 			YPos = b.Y;

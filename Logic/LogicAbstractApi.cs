@@ -31,10 +31,10 @@ namespace Logic
         {
             data = dataAbstractApi;
         }
-        public override void create(int number)
+        public override void create(int num)
         {
             ballOperators = new List<LogicBall>();
-            data.create(number);
+            data.create(num);
             foreach (Ball ball in data.GetBall())
             {
                 ballOperators.Add(new LogicBall(ball));
@@ -90,7 +90,7 @@ namespace Logic
         public void checkMovement(object sender, PropertyChangedEventArgs e)
         {
             Ball b = (Ball)sender;
-            if (e.PropertyName == "VectorCurrent")
+            if (e.PropertyName == "CurrentVector")
             {
                 Collision(Width, Height, b.Radius, b);
                 b.CanMove = true;

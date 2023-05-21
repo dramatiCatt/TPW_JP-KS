@@ -7,7 +7,7 @@ namespace TP.ConcurrentProgramming.PresentationModel
     public abstract class ModelAbstractApi
     {
         private ObservableCollection<BallModel> ballsModel = new ObservableCollection<BallModel>();
-        public static ModelAbstractApi CreateAPI(LogicAbstractApi logicApi = default)
+        public static ModelAbstractApi CreateApi(LogicAbstractApi logicApi = default)
         {
             return new ModelLayer(logicApi ?? LogicAbstractApi.CreateApi());
         }
@@ -32,9 +32,9 @@ namespace TP.ConcurrentProgramming.PresentationModel
             public override int Height => logic.Height;
             public override ObservableCollection<BallModel> create(int num)
             {
-                logic.CreateBalls(number);
+                logic.create(num);
                 ballsModel.Clear();
-                foreach (BallLogic ball in logic.GetBalls())
+                foreach (LogicBall ball in logic.GetBall())
                 {
                     ballsModel.Add(new BallModel(ball));
                 }

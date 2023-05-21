@@ -16,7 +16,7 @@ namespace Logic
 
         public void ChangedBallData(object sender, PropertyChangedEventArgs e)
         {
-            RaisePropertyChanged("VectorCurrent");
+            RaisePropertyChanged("CurrentVector");
         }
 
         public Ball Ball { get => ball; }

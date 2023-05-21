@@ -1,6 +1,8 @@
 ﻿using System.ComponentModel;
 using System.Numerics;
 using System.Runtime.CompilerServices;
+using System.Threading;
+using System.Diagnostics;
 
 namespace Data
 {
@@ -9,7 +11,7 @@ namespace Data
         public Vector2 velocity;
         public float weight;
         public int radius;
-        public bool canMove;
+        public bool canMove = true;
 
         public event PropertyChangedEventHandler PropertyChanged;
 

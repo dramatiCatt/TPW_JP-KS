@@ -16,7 +16,7 @@ namespace Logic
         {
             return new LogicApi(data ?? DataAbstractApi.CreateApi());
         }
-        public abstract void create(int numer);
+        public abstract void create(int num);
         public abstract void stop();
         public abstract ObservableCollection<Ball> Balls { get; }
         public abstract List<LogicBall> GetBall();
@@ -98,8 +98,8 @@ namespace Logic
         }
         public void BallCrash(Ball b1, Ball b2)
         {
-            Vector2 newVelocity1 = (b1.Velocity * (b1.weight - b2.weight) + b2.Velocity * 2 * b2.weight) / (b1.weight + b2.weight);
-            Vector2 newVelocity2 = (b2.Velocity * (b2.weight - b1.weight) + b1.Velocity * 2 * b1.weight) / (b1.weight + b2.weight);
+            Vector2 newVelocity1 = (b1.Velocity * (b1.Weight - b2.Weight) + b2.Velocity * 2 * b2.Weight) / (b1.Weight + b2.Weight);
+            Vector2 newVelocity2 = (b2.Velocity * (b2.Weight - b1.Weight) + b1.Velocity * 2 * b1.Weight) / (b1.Weight + b2.Weight);
             if (newVelocity1.X > 5) newVelocity1.X = 5;
             if (newVelocity1.Y > 5) newVelocity1.Y = 5;
             if (newVelocity1.Y < -5) newVelocity1.Y = -5;

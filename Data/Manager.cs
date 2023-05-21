@@ -10,20 +10,20 @@ namespace Data
 {
     public class Manager 
     {
-        public static int width = 800;
-        public static int height = 400;
-        private Creator creator = new Creator();
-        private ObservableCollection<Ball> balls = new ObservableCollection<Ball>();
-        private List<Task> tasks = new List<Task>();
+        public static int _width = 800;
+        public static int _height = 400;
+        private Creator _creator = new Creator();
+        private ObservableCollection<Ball> _balls = new ObservableCollection<Ball>();
+        private List<Task> _tasks = new List<Task>();
         CancellationTokenSource tokenSource;
         CancellationToken token;
-        private object locked = new object();
+        private object _locked = new object();
 
         public Manager()
         {
         }
-        public int Width { get => width; }
-        public int Height { get => height; }
+        public int Width { get => _width; }
+        public int Height { get => _height; }
         public Manager GetManager()
         {
             return this;
@@ -31,12 +31,12 @@ namespace Data
         
         public void add(Ball ball)
         {
-            balls.Add(ball);
+            _balls.Add(ball);
         }
 
         public void remove(Ball ball)
         {
-            balls.Remove(ball);
+            _balls.Remove(ball);
         }
 
         public void create(int num)
@@ -47,7 +47,7 @@ namespace Data
                 token = tokenSource.Token;
                 for (int i = 0; i < num; i++)
                 {
-                    Ball ball = creator.CreateBall();
+                    Ball ball = _creator.CreateBall();
                     add(ball);
                 }
             }
@@ -59,21 +59,21 @@ namespace Data
             if (tokenSource != null && !tokenSource.IsCancellationRequested)
             {
                 tokenSource.Cancel();
-                tasks.Clear();
-                balls.Clear();
+                _tasks.Clear();
+                _balls.Clear();
             }
         }
 
         public async void moving()
         {
-            foreach (Ball ball in balls)
+            foreach (Ball ball in _balls)
             {
                 Task task = Task.Run(() =>
                 {
                     while (true)
                     {
                         Thread.Sleep(8);
-                        lock(locked)
+                        lock(_locked)
                         {
                             ball.UpdatePosition();
                             while (ball.CanMove == false) { }
@@ -83,23 +83,23 @@ namespace Data
                         catch (System.OperationCanceledException) { break; } //OperationCanceledException if cancel
                     }
                 });
-                tasks.Add(task);
+                _tasks.Add(task);
             }
         }
 
         public Creator Creator
         {
-            get => creator;
+            get => _creator;
         }
 
         public ObservableCollection<Ball> Balls
         {
-            get => balls;
+            get => _balls;
         }
 
         public List<Task> Tasks
         {
-            get => tasks;
+            get => _tasks;
         }
     }
 }

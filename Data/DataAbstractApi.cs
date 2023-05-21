@@ -22,8 +22,8 @@ namespace Data
     public class DataApi : DataAbstractApi
     {
         private Manager manager = new Manager();
-        private int width;
-        private int height;
+        private int _width;
+        private int _height;
         public DataApi() { }
         public override void create(int num)
         {

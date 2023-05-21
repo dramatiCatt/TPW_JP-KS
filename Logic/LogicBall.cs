@@ -7,10 +7,10 @@ namespace Logic
 {
     public class LogicBall : INotifyPropertyChanged
     {
-        private readonly Ball ball;
+        private readonly Ball _ball;
         public LogicBall(Ball ball)
         {
-            ball = ball;
+            _ball = ball;
             ball.PropertyChanged += ChangedBallData;
         }
 
@@ -19,7 +19,7 @@ namespace Logic
             RaisePropertyChanged("CurrentVector");
         }
 
-        public Ball Ball { get => ball; }
+        public Ball Ball { get => _ball; }
 
         public event PropertyChangedEventHandler PropertyChanged;
         public void RaisePropertyChanged(string propertyName)
@@ -29,42 +29,42 @@ namespace Logic
 
         public float X
         {
-            get => ball.X;
+            get => _ball.X;
             set
             {
-                ball.X = value;
+                _ball.X = value;
                 RaisePropertyChanged(nameof(X));
             }
         }
         public float Y
         {
-            get => ball.Y;
+            get => _ball.Y;
             set
             {
-                ball.Y = value;
+                _ball.Y = value;
                 RaisePropertyChanged(nameof(Y));
             }
         }
         public int R
         {
-            get => ball.Radius;
+            get => _ball.Radius;
         }
 
         public float VelX
         {
-            get => ball.velX;
+            get => _ball.velX;
             set
             {
-                ball.velX = value;
+                _ball.velX = value;
             }
         }
 
         public float VY
         {
-            get => ball.velY;
+            get => _ball.velY;
             set
             {
-                ball.velY = value;
+               _ball.velY = value;
             }
         }
     }

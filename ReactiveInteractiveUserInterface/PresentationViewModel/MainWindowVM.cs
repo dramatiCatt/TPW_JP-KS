@@ -8,77 +8,76 @@ using TP.ConcurrentProgramming.PresentationViewModel;
 
 namespace TP.ConcurrentProgramming.PresentationViewModel
 {
-    public class MainWindowVM : VMBase
+    public class MainWindowVM : INotifyPropertyChanged
 
     {
-        private IList balls;
-        private ModelAbstractApi ModelLayer = ModelAbstractApi.CreateApi();
-        private int width;
-        private int height;
-        private int num;
-        private string text;
+        private IList _balls;
+        private ModelAbstractApi model { get; set; }
+        private int _width;
+        private int _height;
+        private int _num;
+        private string _text;
 
 
-        public MainWindowVM() : this(ModelAbstractApi.CreateApi())
+        public MainWindowVM()
         {
-        }
-
-        public MainWindowVM(ModelAbstractApi modelAbstractApi)
-        {
-            ModelLayer = modelAbstractApi;
+            model = ModelAbstractApi.CreateAPI();
             StartClick = new RelayCommand(() => create());
             StopClick = new RelayCommand(() => stop());
-            height = ModelLayer.Height + 4;
-            width = ModelLayer.Width + 4;
-            balls = ModelLayer.create(num);
+            _height = model.Height + 4;
+            _width = model.Width + 4;
+            _balls = model.create(_num);
         }
 
+        public ICommand StopClick { get; set; }
         public ICommand StartClick { get; set; }
 
         private void create()
         {
-            ModelLayer.create(num);
+            model.create(_num);
         }
-
-        public ICommand StopClick { get; set; }
 
         private void stop()
         {
-            ModelLayer.stop();
+            model.stop();
         }
 
         public int Height
         {
-            get
+            get => _height;
+            set
             {
-                return height;
+                _height = value;
+                RaisePropertyChanged("Height");
             }
         }
 
         public int Width
         {
-            get
+            get => _width;
+            set
             {
-                return width;
+                _width = value;
+                RaisePropertyChanged("Width");
             }
         }
 
-        public string Text
+        public string BallsNum
         {
-            get { return text; }
+            get { return _text; }
             set
             {
-                text = value;
+                _text = value;
                 try
                 {
-                    int val = System.Int32.Parse(text);
+                    int val = System.Int32.Parse(_text);
                     if (val > 0 && val <= 20)
                     {
-                        num = val;
+                        _num = val;
                     }
                     else
                     {
-                        num = 0;
+                        _num = 0;
                     }
                     RaisePropertyChanged(nameof(Number));
 
@@ -86,13 +85,13 @@ namespace TP.ConcurrentProgramming.PresentationViewModel
                 catch (System.FormatException)
                 {
                     Trace.WriteLine("Text() z viewModel rzucil wyjatek Format");
-                    num = 0;
+                    _num = 0;
                     RaisePropertyChanged(nameof(Number));
                 }
                 catch (System.OverflowException)
                 {
                     Trace.WriteLine("Text() z viewModel rzucil wyjatek Overflow");
-                    num = 0;
+                    _num = 0;
                     RaisePropertyChanged(nameof(Number));
                 }
             }
@@ -102,23 +101,20 @@ namespace TP.ConcurrentProgramming.PresentationViewModel
         {
             get
             {
-                return num;
+                return _num;
             }
         }
 
         public IList Balls
         {
-            get
-            {
-                return balls;
-            }
-            set
-            {
-                if (value.Equals(balls))
-                    return;
-                balls = value;
-                RaisePropertyChanged(nameof(Balls));
-            }
+            get => _balls;
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+        protected virtual void RaisePropertyChanged([CallerMemberName] string propertyName = null)
+        {
+
+            this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }

@@ -30,7 +30,7 @@
                 <Rectangle Canvas.Left="13" Canvas.Top="7" Height='396' Width='790' StrokeThickness="6" Stroke="#4C6663" HorizontalAlignment="Center" VerticalAlignment="Top"/>
 
                 <!-- pilki -->
-                <ItemsControl ItemsSource="{Binding Balls, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}">
+                <ItemsControl ItemsSource="{Binding Balls, UpdateSourceTrigger=PropertyChanged}">
                     <ItemsControl.ItemsPanel>
                         <ItemsPanelTemplate>
                             <Canvas/>
@@ -38,13 +38,13 @@
                     </ItemsControl.ItemsPanel>
                     <ItemsControl.ItemContainerStyle>
                         <Style TargetType="ContentPresenter">
-                            <Setter Property="Canvas.Left" Value="{Binding X}"/>
-                            <Setter Property="Canvas.Top" Value="{Binding Y}"/>
+                            <Setter Property="Canvas.Left" Value="{Binding XPos}"/>
+                            <Setter Property="Canvas.Top" Value="{Binding YPos}"/>
                         </Style>
                     </ItemsControl.ItemContainerStyle>
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
-                            <Ellipse Width="{Binding Diameter}" Height='{Binding Diameter}' Fill="MediumPurple"/>
+                            <Ellipse Width="{Binding Diameter}" Height="{Binding Diameter}" Fill="MediumPurple"/>
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>
                 </ItemsControl>

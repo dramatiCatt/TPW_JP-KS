@@ -7,18 +7,11 @@ using System.Diagnostics;
 namespace Data
 {
     public class Ball : INotifyPropertyChanged {
-        public Vector2 currentVector;
-        public Vector2 velocity;
-        public float weight;
-        public int radius;
-        public bool canMove = true;
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        public void RaisePropertyChanged(string propertyName)
-        {
-            this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
+        private Vector2 _currentVector;
+        private Vector2 _velocity;
+        private float _weight;
+        private int _radius;
+        private bool _canMove = true;
 
         public Ball()
         {
@@ -26,101 +19,108 @@ namespace Data
 
         public Ball(Vector2 vector)
         {
-            currentVector = vector;
-            radius = 15;
+            _currentVector = vector;
+            _radius = 15;
         }
 
         public Ball(float x, float y, int radius, float weight, Vector2 velocity)
         {
-            currentVector.X = x;
-            currentVector.Y = y;
-            radius = radius;
-            weight = weight;
-            velocity = velocity;
+            _currentVector.X = x;
+            _currentVector.Y = y;
+            _radius = radius;
+            _weight = weight;
+            _velocity = velocity;
         }
 
         public void UpdatePosition()
         {
-            if (canMove)
+            if (_canMove)
             {
-                currentVector += velocity;
-                canMove = false;
+                _currentVector += _velocity;
+                _canMove = false;
                 RaisePropertyChanged("CurrentVector");
             }
         }
 
         public Vector2 CurrentVector
         {
-            get => currentVector;
-            set => currentVector = value;
+            get => _currentVector;
+            set => _currentVector = value;
         }
         public Vector2 Velocity
         {
-            get => velocity;
-            set => velocity = value;
+            get => _velocity;
+            set => _velocity = value;
         }
         public float Weight
         {
-            get => weight;
+            get => _weight;
             set
             {
-                weight = value;
+                _weight = value;
             }
         }
         public int Radius
         {
-            get => radius;
+            get => _radius;
         }
 
         public bool CanMove
         {
-            get => canMove;
-            set { canMove = value; }
+            get => _canMove;
+            set { _canMove = value; }
         }
 
         public float X
         {
-            get => currentVector.X;
+            get => _currentVector.X;
             set
             {
-                currentVector.X = value;
+                _currentVector.X = value;
                 RaisePropertyChanged("X");
             }
         }
 
         public float Y
         {
-            get => currentVector.Y;
+            get => _currentVector.Y;
             set
             {
-                currentVector.Y = value;
+                _currentVector.Y = value;
                 RaisePropertyChanged("Y");
             }
         }
         public float velX
         {
-            get => velocity.X;
+            get => _velocity.X;
             set
             {
                 if (value > 5)
                     value = 5;
                 else if (value < -5)
                     value = -5;
-                velocity.X = value;
+                _velocity.X = value;
             }
         }
 
         public float velY
         {
-            get => velocity.Y;
+            get => _velocity.Y;
             set
             {
                 if (value > 5)
                     value = 5;
                 else if (value < -5)
                     value = -5;
-               velocity.Y = value;
+               _velocity.Y = value;
             }
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        public void RaisePropertyChanged(string propertyName)
+        {
+            this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
     }

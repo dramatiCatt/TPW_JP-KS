@@ -17,7 +17,7 @@
             <TextBlock Canvas.Left="304" Canvas.Top="100" TextAlignment="Left" FontSize="20" Height="30" Width="110" Text="Ilosc kulek:" HorizontalAlignment="Left" VerticalAlignment="Center" FontFamily="Century Gothic" FontWeight="UltraBold"/>
             
             <!-- Pole do wpisania-->
-            <TextBox Canvas.Left="450" Canvas.Top="100" TextAlignment="Left" FontSize="20" Height="30" Width="100" Text="{Binding Text}" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+            <TextBox Canvas.Left="450" Canvas.Top="100" TextAlignment="Left" FontSize="20" Height="30" Width="100" Text="{Binding BallsNum}" HorizontalAlignment="Left" VerticalAlignment="Center"/>
 
             <!-- Przycisk do startowania-->
             <Button Canvas.Left="610" Canvas.Top="100" Height="30" Width="100" Content="Start" Command="{Binding StartClick}" HorizontalAlignment="Left" VerticalAlignment="Center"  Background="#80CFA9" FontFamily="Century Gothic" FontWeight="UltraBold"/>

@@ -6,7 +6,16 @@ using System.Diagnostics;
 
 namespace Data
 {
-    public class Ball : INotifyPropertyChanged {
+    public interface IBall{
+        Vector2 CurrentVector { get; }
+        int MoveTime { get; }
+        const int Radius;
+        float Weight { get; }
+        Vector2 Velocity { get; get}
+        }
+
+    internal class Ball : IBall{
+        private int _moveTime;
         private Vector2 _currentVector;
         private Vector2 _velocity;
         private float _weight;
@@ -30,6 +39,8 @@ namespace Data
             _radius = radius;
             _weight = weight;
             _velocity = velocity;
+            MoveTime = 1000 / 60;
+            RunTask();
         }
 
         public void UpdatePosition()
@@ -40,6 +51,60 @@ namespace Data
                 _canMove = false;
                 RaisePropertyChanged("CurrentVector");
             }
+        }
+
+        public int MoveTime {
+            get => _moveTime;
+            private set
+            {
+                _moveTime = value;
+            }
+        }
+
+       /* public async void moving()
+        {
+            foreach (Ball ball in _balls)
+            {
+                Task task = Task.Run(() =>
+                {
+                    while (true)
+                    {
+                        Thread.Sleep(8);
+                        lock (_locked)
+                        {
+                            ball.UpdatePosition();
+                            while (ball.CanMove == false) { }
+                        }
+                        ball.UpdatePosition();
+                        try { token.ThrowIfCancellationRequested(); }
+                        catch (System.OperationCanceledException) { break; } //OperationCanceledException if cancel
+                    }
+                });
+                _tasks.Add(task);
+            }
+        }*/
+
+        public void Move()
+        {
+            CurrentVector += Velocity * MoveTime;
+            OnPositonChanged();
+        }
+
+        private void RunTask()
+        {
+            Task.Run(async () =>
+            {
+                while (true)
+                {
+                    Move();
+                    await Task.Delay(MoveTime);
+                }
+            });
+        }
+
+        internal void OnPositionChanged()
+        {
+            OnPositionChanged?.Invoke(this, EventArgs.Empty);
         }
 
         public Vector2 CurrentVector

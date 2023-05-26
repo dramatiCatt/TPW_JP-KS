@@ -49,9 +49,18 @@ namespace Data
                 {
                     Ball ball = _creator.CreateBall();
                     add(ball);
+                    ball.PositionChanged += Ball_PositionChanged;
                 }
             }
-            moving();
+            //moving();
+        }
+
+        private void Ball_PositionChanged(object sender, EventArgs e)
+        {
+            if (sender != null)
+            {
+                BallEvent?.Invoke(sender, EventArgs.Empty);
+            }
         }
 
         public void stop()
@@ -61,29 +70,6 @@ namespace Data
                 tokenSource.Cancel();
                 _tasks.Clear();
                 _balls.Clear();
-            }
-        }
-
-        public async void moving()
-        {
-            foreach (Ball ball in _balls)
-            {
-                Task task = Task.Run(() =>
-                {
-                    while (true)
-                    {
-                        Thread.Sleep(8);
-                        lock(_locked)
-                        {
-                            ball.UpdatePosition();
-                            while (ball.CanMove == false) { }
-                        }
-                        ball.UpdatePosition();
-                        try { token.ThrowIfCancellationRequested(); }
-                        catch (System.OperationCanceledException) { break; } //OperationCanceledException if cancel
-                    }
-                });
-                _tasks.Add(task);
             }
         }
 

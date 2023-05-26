@@ -1,68 +1,60 @@
 ﻿using NUnit.Framework;
 using Logic;
+using Data;
 using System.Numerics;
+using System.Collections.ObjectModel;
+using System.Collections.Generic;
 
 namespace LogicTest
 {
-    public class BallTests
+    public class LogicTests
     {
+
+
         [SetUp]
         public void Setup()
         {
         }
-
         [Test]
-        public void BallConstructor()
+        public void TestLogicApi()
         {
-            LogicBall ball = new LogicBall(2, 1, 3, 7);
-            Assert.True(ball.currentVector.X == 2);
-            Assert.True(ball.currentVector.Y == 1);
-
-            float whereX = ball.whereVector.X;
-            float whereY = ball.whereVector.Y;
-
-            Assert.True(whereX == 3 || whereX == Manager.width - 3 || whereY == 3 || whereY == Manager.height - 3);
-            Assert.False(whereX == Manager.height - 2);
-            Assert.True(ball.Diameter == 6);
-            Assert.True(ball.Speed == 7);
+            DataAbstractApi data = new DataApi();
+            LogicAbstractApi logic = new LogicApi(data); //?
+            Assert.True(logic.Height == 400);
+            Assert.True(logic.Width == 800);
+            logic.create(2);
+            ObservableCollection<Ball> balls = logic.Balls;
+            Assert.True(balls.Count == 2);
+            Assert.True(balls[0].X < logic.Width);
+            Assert.True(balls[0].Y < logic.Height);
+            Assert.True(balls[0].X > 0);
+            Assert.True(balls[0].Y > 0);
+            List<LogicBall> ballsLogic = logic.GetBall();
+            Assert.True(ballsLogic[0].Ball == balls[0]);
+            logic.stop();
+            Assert.True(balls.Count == 0);
         }
 
         [Test]
-        public void GenerateDestinationTest()
+        public void TestLogic()
         {
-            LogicBall ball = new LogicBall(2, 33, 3, 7);
-            ball.createNewVectorDestination();
-            Assert.True(ball.whereVector.X > 2 && ball.whereVector.Y >= 2 && ball.whereVector.Y <= Manager.height - 2
-                && ball.whereVector.X <= Manager.width - 2);
-            
-            LogicBall ball2 = new LogicBall(33, 1, 5, 2);
-            ball2.createNewVectorDestination();
-            Assert.True(ball2.whereVector.X >= 1 && ball2.whereVector.Y > 1 && ball2.whereVector.Y <= Manager.height - 1
-                && ball2.whereVector.X <= Manager.width - 1);
-            
-            LogicBall ball3 = new LogicBall(Manager.width - 5, 33, 5, 2);
-            ball3.createNewVectorDestination();
-            Assert.True(ball3.whereVector.X >= 5 && ball3.whereVector.Y >= 5 && ball3.whereVector.Y <= Manager.height - 5
-                && ball3.whereVector.X < Manager.width - 5);
-            
-            LogicBall ball4 = new LogicBall(33, Manager.height - 5, 5, 2);
-            ball4.createNewVectorDestination();
-            Assert.True(ball4.whereVector.X >= 5 && ball4.whereVector.Y >= 5 && ball4.whereVector.Y < Manager.height - 5
-                && ball4.whereVector.X <= Manager.width - 5);
+            DataAbstractApi data = new DataApi();
+            LogicApi logic = new LogicApi(data);
+            logic.create(1); Vector2 velocity = new Vector2(1, 1);
+            Ball ball1 = new Ball(-5, -20, 10, 2, velocity);
+            Assert.True(ball1.velX == 1);
+            logic.Collision(800, 400, ball1.Radius, ball1);
+            Assert.True(ball1.velX == -1);
 
-        }
-
-        [Test]
-        public void UpdatePositionTest()
-        {
-            LogicBall ball = new LogicBall(2, 10, 6, 2);
-            Vector2 first = ball.currentVector;
-            Vector2 second = new Vector2(20, 10);
-            ball.whereVector = second;
-            ball.UpdatePosition();
-            Assert.AreEqual(Vector2.Distance(ball.currentVector, first), System.Math.Ceiling(2f));
-            Assert.AreEqual(4, System.Math.Ceiling(ball.currentVector.X));
-            Assert.AreEqual(10, ball.currentVector.Y);
+            Vector2 velocity2 = new Vector2(2, 1.5f);
+            Vector2 velocity3 = new Vector2(-1, -0.3f);
+            Ball ball2 = new Ball(30, 20, 10, 2, velocity);
+            Ball ball3 = new Ball(40, 25, 10, 2, velocity);
+            logic.BallCrash(ball2, ball3);
+            Assert.True(ball2.velX != velocity2.X);
+            Assert.True(ball2.velY != velocity2.Y);
+            Assert.True(ball3.velX != velocity3.X);
+            Assert.True(ball3.velY != velocity3.Y);
         }
     }
 }

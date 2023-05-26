@@ -3,16 +3,19 @@ using System.Numerics;
 using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Diagnostics;
+using System.Threading.Tasks;
+using System;
 
 namespace Data
 {
     public interface IBall{
         Vector2 CurrentVector { get; }
         int MoveTime { get; }
-        const int Radius;
+        const int Radius = 15;
         float Weight { get; }
-        Vector2 Velocity { get; get}
-        }
+        Vector2 Velocity { get; }
+        bool CanMove { get; set; }
+    }
 
     internal class Ball : IBall{
         private int _moveTime;
@@ -61,33 +64,10 @@ namespace Data
             }
         }
 
-       /* public async void moving()
-        {
-            foreach (Ball ball in _balls)
-            {
-                Task task = Task.Run(() =>
-                {
-                    while (true)
-                    {
-                        Thread.Sleep(8);
-                        lock (_locked)
-                        {
-                            ball.UpdatePosition();
-                            while (ball.CanMove == false) { }
-                        }
-                        ball.UpdatePosition();
-                        try { token.ThrowIfCancellationRequested(); }
-                        catch (System.OperationCanceledException) { break; } //OperationCanceledException if cancel
-                    }
-                });
-                _tasks.Add(task);
-            }
-        }*/
-
         public void Move()
         {
             CurrentVector += Velocity * MoveTime;
-            OnPositonChanged();
+            OnPositionChanged();
         }
 
         private void RunTask()
@@ -102,9 +82,11 @@ namespace Data
             });
         }
 
+        internal event EventHandler PositionChanged;
+
         internal void OnPositionChanged()
         {
-            OnPositionChanged?.Invoke(this, EventArgs.Empty);
+            PositionChanged?.Invoke(this, EventArgs.Empty);
         }
 
         public Vector2 CurrentVector

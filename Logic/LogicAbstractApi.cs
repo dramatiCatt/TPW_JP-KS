@@ -18,7 +18,7 @@ namespace Logic
         }
         public abstract void create(int num);
         public abstract void stop();
-        public abstract ObservableCollection<Ball> Balls { get; }
+        public abstract ObservableCollection<IBall> Balls { get; }
         public abstract List<LogicBall> GetBall();
         public abstract int Height { get; }
         public abstract int Width { get; }
@@ -35,7 +35,7 @@ namespace Logic
         {
             ballOperators = new List<LogicBall>();
             data.create(num);
-            foreach (Ball ball in data.GetBall())
+            foreach (IBall ball in data.GetBall())
             {
                 ballOperators.Add(new LogicBall(ball));
                 ball.PropertyChanged += checkMovement;
@@ -46,11 +46,11 @@ namespace Logic
         {
             return ballOperators;
         }
-        public override ObservableCollection<Ball> Balls => data.GetBall();
+        public override ObservableCollection<IBall> Balls => data.GetBall();
         public override int Width => data.Width;
         public override int Height => data.Height;
 
-        public async void Collision(int width, int height, int radius, Ball ball)
+        public async void Collision(int width, int height, int radius, IBall ball)
         {
             foreach (LogicBall thisBall in ballOperators)
             {
@@ -89,14 +89,14 @@ namespace Logic
         }
         public void checkMovement(object sender, PropertyChangedEventArgs e)
         {
-            Ball b = (Ball)sender;
+            IBall b = (IBall)sender;
             if (e.PropertyName == "CurrentVector")
             {
                 Collision(Width, Height, b.Radius, b);
                 b.CanMove = true;
             }
         }
-        public void BallCrash(Ball b1, Ball b2)
+        public void BallCrash(IBall b1, IBall b2)
         {
             Vector2 newVelocity1 = (b1.Velocity * (b1.Weight - b2.Weight) + b2.Velocity * 2 * b2.Weight) / (b1.Weight + b2.Weight);
             Vector2 newVelocity2 = (b2.Velocity * (b2.Weight - b1.Weight) + b1.Velocity * 2 * b1.Weight) / (b1.Weight + b2.Weight);

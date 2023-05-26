@@ -15,9 +15,11 @@ namespace Data
         public abstract void create(int num);
         public abstract void stop();
         public abstract Manager GetManager();
-        public abstract ObservableCollection<Ball> GetBall();
+        public abstract ObservableCollection<IBall> GetBall();
         public abstract int Width { get; }
         public abstract int Height { get; }
+
+        public abstract event EventHandler BallEvent;
     }
     public class DataApi : DataAbstractApi
     {
@@ -30,6 +32,7 @@ namespace Data
             manager = new Manager();
             manager.create(num);
         }
+        public override event EventHandler BallEvent;
         public override void stop()
         {
             if (manager != null)
@@ -41,7 +44,7 @@ namespace Data
         {
             return manager;
         }
-        public override ObservableCollection<Ball> GetBall()
+        public override ObservableCollection<IBall> GetBall()
         {
             return manager.Balls;
         }

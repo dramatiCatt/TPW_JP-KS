@@ -15,7 +15,7 @@ namespace Data
 
             public Creator() { }
 
-            public Ball CreateBall()
+            private Ball CreateBall()
             {
                 float X = _creator.Next(2 + _radius, width - _radius - 2);
                 float Y = _creator.Next(2 + _radius, height - _radius - 2);

@@ -1,4 +1,5 @@
 ﻿using Data;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
@@ -13,11 +14,13 @@ namespace Data
         public static int _width = 800;
         public static int _height = 400;
         private Creator _creator = new Creator();
-        private ObservableCollection<Ball> _balls = new ObservableCollection<Ball>();
+        private ObservableCollection<IBall> _balls = new ObservableCollection<IBall>();
         private List<Task> _tasks = new List<Task>();
         CancellationTokenSource tokenSource;
         CancellationToken token;
         private object _locked = new object();
+        public event EventHandler BallEvent;
+
 
         public Manager()
         {
@@ -29,12 +32,12 @@ namespace Data
             return this;
         }
         
-        public void add(Ball ball)
+        private void add(Ball ball)
         {
             _balls.Add(ball);
         }
 
-        public void remove(Ball ball)
+        private void remove(Ball ball)
         {
             _balls.Remove(ball);
         }
@@ -78,7 +81,7 @@ namespace Data
             get => _creator;
         }
 
-        public ObservableCollection<Ball> Balls
+        private ObservableCollection<Ball> Balls
         {
             get => _balls;
         }

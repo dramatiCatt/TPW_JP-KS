@@ -11,101 +11,126 @@ namespace Logic
 {
     public abstract class LogicAbstractApi
     {
-        public List<LogicBall> ballOperators;
+        //public List<LogicBall> ballOperators;
+        public abstract void create(int num);
+        public abstract void stop();
+        public abstract int getNum();
+        public abstract float getX(int number);
+        public abstract float getY(int number);
+        public abstract event EventHandler LogicApiEvent;
         public static LogicAbstractApi CreateApi(DataAbstractApi data = default)
         {
             return new LogicApi(data ?? DataAbstractApi.CreateApi());
-        }
-        public abstract void create(int num);
-        public abstract void stop();
-        public abstract ObservableCollection<IBall> Balls { get; }
-        public abstract List<LogicBall> GetBall();
-        public abstract int Height { get; }
-        public abstract int Width { get; }
-    }
-    public class LogicApi : LogicAbstractApi
-    {
-        private readonly DataAbstractApi data;
+        }//u nicg logicapi 13
+        public static int _width = 800;
+        public static int _height = 400;
+        public static int _radius = 15;
+        private class LogicApi : LogicAbstractApi
+        {
+            private readonly DataAbstractApi data;//nie readonly
 
-        public LogicApi(DataAbstractApi dataAbstractApi)
-        {
-            data = dataAbstractApi;
-        }
-        public override void create(int num)
-        {
-            ballOperators = new List<LogicBall>();
-            data.create(num);
-            foreach (IBall ball in data.GetBall())
+            public LogicApi(DataAbstractApi dataAbstractApi)
             {
-                ballOperators.Add(new LogicBall(ball));
-                ball.PropertyChanged += checkMovement;
+                data = dataAbstractApi;
+                data.BallEvent += Ball_PositionChanged;
             }
-        }
-        public override void stop() => data.stop();
-        public override List<LogicBall> GetBall()
-        {
-            return ballOperators;
-        }
-        public override ObservableCollection<IBall> Balls => data.GetBall();
-        public override int Width => data.Width;
-        public override int Height => data.Height;
-
-        public async void Collision(int width, int height, int radius, IBall ball)
-        {
-            foreach (LogicBall thisBall in ballOperators)
+            public override event EventHandler LogicApiEvent;
+            public override void create(int num)
             {
-                if (thisBall.Ball == ball)
+                data.create(num);  
+            }
+            private int _width;
+            private int _height;
+            private int _radius;
+            object _lock = new object();
+            public int Width { get => _width; }
+            public int Height { get => _height; }
+            public int Radius { get => _radius; }   
+            public override void stop() => data.stop();
+            public override int getNum()
+            {
+                return data.getNum();
+            }
+            public override float getX(int number)
+            {
+                return data.getX(number);
+            }
+            public override float getY(int number)
+            {
+                return data.getY(number);
+            }
+
+            private void Ball_PositionChanged(object sender, EventArgs e)
+            {
+                IBall ball = (IBall)sender;
+                if (ball != null)
                 {
-                    continue;
+                    Collision(_width, _height, 15, ball);
+                    LogicApiEvent?.Invoke(this, EventArgs.Empty);
                 }
-                thisBall.Ball.CanMove = false;
-                float distance = Vector2.Distance(ball.CurrentVector, thisBall.Ball.CurrentVector);
-                if (distance <= (ball.Radius + thisBall.Ball.Radius))
+            }
+
+            public async void Collision(int width, int height, int radius, IBall ball)
+            {
+                Vector2 speed = new Vector2(ball.Velocity.X, ball.Velocity.Y);
+                lock (_lock)
                 {
-                    if (Vector2.Distance(ball.CurrentVector, thisBall.Ball.CurrentVector)
-                    - Vector2.Distance(ball.CurrentVector + ball.Velocity, thisBall.Ball.CurrentVector + thisBall.Ball.Velocity) > 0)
+                    for (int i = 0; i < data.getNum(); i++)
                     {
-                        BallCrash(ball, thisBall.Ball);
+                        IBall testBall = data.GetBall(i);
+                        if(testBall != ball)
+                        {
+                            float distance = Vector2.Distance(ball.CurrentVector, testBall.CurrentVector);
+                            if (distance <= 30)
+                            {
+                                if (Vector2.Distance(ball.CurrentVector, testBall.CurrentVector)
+                                - Vector2.Distance(ball.CurrentVector + ball.Velocity, testBall.CurrentVector + testBall.Velocity) > 0)
+                                {
+                                    BallCrash(ball, testBall);
+                                }
+                            }
+                        }
                     }
                 }
-                thisBall.Ball.CanMove = true;
+                
+                if (ball.Velocity.X + ball.CurrentVector.X > width - radius)
+                {
+                    speed.X = ball.Velocity.X * (-1);
+                }
+                else if (ball.Velocity.X + ball.CurrentVector.X < radius)
+                {
+                    speed.X = ball.Velocity.X * (-1);
+                }
+                else if (ball.Velocity.Y + ball.CurrentVector.Y > height - radius)
+                {
+                    speed.Y = ball.Velocity.Y * (-1);
+                }
+                else if (ball.Velocity.Y + ball.CurrentVector.Y < radius)
+                {
+                    speed.Y = ball.Velocity.Y * (-1);
+                }
             }
-            if (ball.X + ball.velX > Width - radius)
+            public void checkMovement(object sender, PropertyChangedEventArgs e)
             {
-                ball.velX = ball.velX * (-1);
+                IBall b = (IBall)sender;
+                b.CanMove = false;
+                if (e.PropertyName == "CurrentVector")
+                {
+                    Collision(Width, Height, 15, b);
+                    b.CanMove = true;
+                }
             }
-            else if (ball.X + ball.velX < radius)
+            public void BallCrash(IBall b1, IBall b2)
             {
-                ball.velX = ball.velX * (-1);
+                Vector2 newVelocity1 = (b1.Velocity * (b1.Weight - b2.Weight) + b2.Velocity * 2 * b2.Weight) / (b1.Weight + b2.Weight);
+                Vector2 newVelocity2 = (b2.Velocity * (b2.Weight - b1.Weight) + b1.Velocity * 2 * b1.Weight) / (b1.Weight + b2.Weight);
+                if (newVelocity1.X > 5) newVelocity1.X = 5;
+                if (newVelocity1.Y > 5) newVelocity1.Y = 5;
+                if (newVelocity1.Y < -5) newVelocity1.Y = -5;
+                if (newVelocity1.X < -5) newVelocity1.X = -5;
+                b1.Velocity = newVelocity1;
+                b2.Velocity = newVelocity2;
             }
-            else if (ball.Y + ball.velY > height - radius)
-            {
-                ball.velY = ball.velY * (-1);
-            }
-            else if (ball.Y + ball.velY < radius)
-            {
-                ball.velY = ball.velY * (-1);
-            }
-        }
-        public void checkMovement(object sender, PropertyChangedEventArgs e)
-        {
-            IBall b = (IBall)sender;
-            if (e.PropertyName == "CurrentVector")
-            {
-                Collision(Width, Height, b.Radius, b);
-                b.CanMove = true;
-            }
-        }
-        public void BallCrash(IBall b1, IBall b2)
-        {
-            Vector2 newVelocity1 = (b1.Velocity * (b1.Weight - b2.Weight) + b2.Velocity * 2 * b2.Weight) / (b1.Weight + b2.Weight);
-            Vector2 newVelocity2 = (b2.Velocity * (b2.Weight - b1.Weight) + b1.Velocity * 2 * b1.Weight) / (b1.Weight + b2.Weight);
-            if (newVelocity1.X > 5) newVelocity1.X = 5;
-            if (newVelocity1.Y > 5) newVelocity1.Y = 5;
-            if (newVelocity1.Y < -5) newVelocity1.Y = -5;
-            if (newVelocity1.X < -5) newVelocity1.X = -5;
-            b1.Velocity = newVelocity1;
-            b2.Velocity = newVelocity2;
         }
     }
 }

@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Collections.ObjectModel;
 using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Data
 {
@@ -14,47 +16,65 @@ namespace Data
         }
         public abstract void create(int num);
         public abstract void stop();
-        public abstract Manager GetManager();
-        public abstract ObservableCollection<IBall> GetBall();
-        public abstract int Width { get; }
-        public abstract int Height { get; }
+        public abstract int getNum();
+
+        public Creator _creator = new Creator();
+        public abstract float getX(int number);
+        public abstract float getY(int number);
+        public abstract IBall GetBall(int num);
+       
 
         public abstract event EventHandler BallEvent;
     }
     public class DataApi : DataAbstractApi
     {
-        private Manager manager = new Manager();
-        private int _width;
-        private int _height;
+
+        private List<IBall> Balls { get; }
         public DataApi() { }
-        public override void create(int num)
-        {
-            manager = new Manager();
-            manager.create(num);
-        }
+        
         public override event EventHandler BallEvent;
+
         public override void stop()
         {
-            if (manager != null)
+            Balls.Clear();
+        }
+        public override void create(int num)
+        {
+            if (num > 0)
             {
-                manager.stop();
+                
+                for (int i = 0; i < num; i++)
+                {
+                    Ball ball = _creator.CreateBall();
+                    Balls.Add(ball);
+                    ball.PositionChanged += Ball_PositionChanged;
+                }
+            }
+            //moving();
+        }
+
+        private void Ball_PositionChanged(object sender, EventArgs e)
+        {
+            if (sender != null)
+            {
+                BallEvent?.Invoke(sender, EventArgs.Empty);
             }
         }
-        public override Manager GetManager()
+        public override int getNum()
         {
-            return manager;
+            return Balls.Count;
         }
-        public override ObservableCollection<IBall> GetBall()
+        public override float getX(int number)
         {
-            return manager.Balls;
+            return Balls[number].CurrentVector.X;
         }
-        public override int Height
+        public override float getY(int number)
         {
-            get => manager.Height;
+            return Balls[number].CurrentVector.Y;
         }
-        public override int Width
+        public override IBall GetBall(int number)
         {
-            get => manager.Width;
+            return Balls[number];
         }
     }
 

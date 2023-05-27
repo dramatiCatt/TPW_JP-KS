@@ -6,7 +6,7 @@ namespace Data
 {
         public class Creator
         {
-            private Random _creator = new Random();
+            public Random _creator = new Random();
             public static int width = 800;
             public static int height = 400;
             private int _x;
@@ -15,7 +15,7 @@ namespace Data
 
             public Creator() { }
 
-            private Ball CreateBall()
+            public Ball CreateBall()
             {
                 float X = _creator.Next(2 + _radius, width - _radius - 2);
                 float Y = _creator.Next(2 + _radius, height - _radius - 2);

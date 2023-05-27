@@ -13,7 +13,7 @@ namespace Data
         int MoveTime { get; }
         const int Radius = 15;
         float Weight { get; }
-        Vector2 Velocity { get; }
+        Vector2 Velocity { get; set; }
         bool CanMove { get; set; }
     }
 
@@ -25,35 +25,22 @@ namespace Data
         private int _radius;
         private bool _canMove = true;
 
-        public Ball()
-        {
-        }
-
-        public Ball(Vector2 vector)
-        {
-            _currentVector = vector;
-            _radius = 15;
-        }
 
         public Ball(float x, float y, int radius, float weight, Vector2 velocity)
         {
+            Random rnd = new Random();
             _currentVector.X = x;
             _currentVector.Y = y;
+            Velocity = new Vector2(x, y) {
+                X = (float)(rnd.NextDouble() * (3 + 3) - 3),
+                Y = (float)(rnd.NextDouble() * (3 + 3) - 3)
+            };
+            //position oni tu mają
             _radius = radius;
             _weight = weight;
             _velocity = velocity;
             MoveTime = 1000 / 60;
             RunTask();
-        }
-
-        public void UpdatePosition()
-        {
-            if (_canMove)
-            {
-                _currentVector += _velocity;
-                _canMove = false;
-                RaisePropertyChanged("CurrentVector");
-            }
         }
 
         public int MoveTime {
@@ -118,57 +105,6 @@ namespace Data
             set { _canMove = value; }
         }
 
-        public float X
-        {
-            get => _currentVector.X;
-            set
-            {
-                _currentVector.X = value;
-                RaisePropertyChanged("X");
-            }
-        }
-
-        public float Y
-        {
-            get => _currentVector.Y;
-            set
-            {
-                _currentVector.Y = value;
-                RaisePropertyChanged("Y");
-            }
-        }
-        public float velX
-        {
-            get => _velocity.X;
-            set
-            {
-                if (value > 5)
-                    value = 5;
-                else if (value < -5)
-                    value = -5;
-                _velocity.X = value;
-            }
-        }
-
-        public float velY
-        {
-            get => _velocity.Y;
-            set
-            {
-                if (value > 5)
-                    value = 5;
-                else if (value < -5)
-                    value = -5;
-               _velocity.Y = value;
-            }
-        }
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        public void RaisePropertyChanged(string propertyName)
-        {
-            this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
 
     }
 

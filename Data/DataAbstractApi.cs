@@ -18,6 +18,8 @@ namespace Data
         public abstract void create(int num);
         public abstract void stop();
         public abstract int getNum();
+        public abstract int Width { get; }
+        public abstract int Height { get; }
 
         public Creator _creator = new Creator();
         public abstract float getX(int number);
@@ -32,7 +34,13 @@ namespace Data
     {
 
         private List<IBall> Balls { get; }
-        public DataApi() { }
+        public override int Width { get; }
+        public override int Height { get; }
+        public DataApi() {
+            Balls = new List<IBall>();
+            Width = 400;
+            Height = 800;
+        }
         
         public override event EventHandler BallEvent;
 

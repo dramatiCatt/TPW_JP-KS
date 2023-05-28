@@ -21,7 +21,7 @@ namespace Logic
         public static LogicAbstractApi CreateApi(DataAbstractApi data = default)
         {
             return new LogicApi(data ?? DataAbstractApi.CreateApi());
-        }//u nicg logicapi 13
+        }//logicapi 13
         public static int _width = 800;
         public static int _height = 400;
         public static int _radius = 15;

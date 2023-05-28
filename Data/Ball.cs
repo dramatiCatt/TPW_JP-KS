@@ -17,7 +17,8 @@ namespace Data
         bool CanMove { get; set; }
     }
 
-    internal class Ball : IBall{
+    internal class Ball : IBall
+    {
         private int _moveTime;
         private Vector2 _currentVector;
         private Vector2 _velocity;
@@ -35,7 +36,7 @@ namespace Data
                 X = (float)(rnd.NextDouble() * (3 + 3) - 3),
                 Y = (float)(rnd.NextDouble() * (3 + 3) - 3)
             };
-            //position oni tu mają
+            //position tu ?
             _radius = radius;
             _weight = weight;
             _velocity = velocity;

@@ -5,6 +5,7 @@ using System.Collections.ObjectModel;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Numerics;
 
 namespace Data
 {
@@ -22,10 +23,11 @@ namespace Data
         public abstract float getX(int number);
         public abstract float getY(int number);
         public abstract IBall GetBall(int num);
-       
 
         public abstract event EventHandler BallEvent;
+
     }
+
     public class DataApi : DataAbstractApi
     {
 
@@ -42,15 +44,18 @@ namespace Data
         {
             if (num > 0)
             {
-                
+                Random rnd = new Random();  
                 for (int i = 0; i < num; i++)
                 {
-                    Ball ball = _creator.CreateBall();
+                    float x, y;
+                    x = (float)(rnd.NextDouble() * (3 + 3) - 3);
+                    y = (float)(rnd.NextDouble() * (3 + 3) - 3);
+                    Vector2 vel = new Vector2(x, y);
+                    Ball ball = new Ball((rnd.Next(100, 300)), rnd.Next(100, 300), 15, rnd.Next(1, 5), vel);
                     Balls.Add(ball);
                     ball.PositionChanged += Ball_PositionChanged;
                 }
             }
-            //moving();
         }
 
         private void Ball_PositionChanged(object sender, EventArgs e)

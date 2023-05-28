@@ -120,9 +120,9 @@ namespace Logic
                     b.CanMove = true;
                 }
             }
-            public void BallCrash(IBall b1, IBall b2)
+            private void BallCrash(IBall b1, IBall b2)
             {
-                Vector2 newVelocity1 = (b1.Velocity * (b1.Weight - b2.Weight) + b2.Velocity * 2 * b2.Weight) / (b1.Weight + b2.Weight);
+               Vector2 newVelocity1 = (b1.Velocity * (b1.Weight - b2.Weight) + b2.Velocity * 2 * b2.Weight) / (b1.Weight + b2.Weight);
                 Vector2 newVelocity2 = (b2.Velocity * (b2.Weight - b1.Weight) + b1.Velocity * 2 * b1.Weight) / (b1.Weight + b2.Weight);
                 if (newVelocity1.X > 5) newVelocity1.X = 5;
                 if (newVelocity1.Y > 5) newVelocity1.Y = 5;
@@ -130,6 +130,7 @@ namespace Logic
                 if (newVelocity1.X < -5) newVelocity1.X = -5;
                 b1.Velocity = newVelocity1;
                 b2.Velocity = newVelocity2;
+
             }
         }
     }

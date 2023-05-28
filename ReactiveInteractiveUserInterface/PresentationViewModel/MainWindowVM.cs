@@ -7,10 +7,11 @@ using TP.ConcurrentProgramming.PresentationModel;
 using TP.ConcurrentProgramming.PresentationViewModel;
 using System.Runtime.CompilerServices;
 using System.ComponentModel;
+using System.Collections.ObjectModel;
 
 namespace TP.ConcurrentProgramming.PresentationViewModel
 {
-    public class MainWindowVM : INotifyPropertyChanged
+    /*public class MainWindowVM : INotifyPropertyChanged
 
     {
         private IList _balls;
@@ -117,6 +118,25 @@ namespace TP.ConcurrentProgramming.PresentationViewModel
         {
 
             this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+    }*/
+    public class MainWindowVM
+    {
+        private ModelAbstractApi Api { get; set; }
+        public ObservableCollection<BallModel> Balls { get; }
+        public int numBalls { get; set; }
+        public ICommand AddCommand { get; set; }
+
+        public MainWindowVM()
+        {
+            Api = ModelAbstractApi.CreateApi();
+            Balls = Api.Balls;
+            AddCommand = new RelayCommand(add);
+        }
+
+        public void add()
+        {
+            Api.create(numBalls);
         }
     }
 }

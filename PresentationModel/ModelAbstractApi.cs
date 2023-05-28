@@ -8,8 +8,9 @@ namespace TP.ConcurrentProgramming.PresentationModel
 {
     public abstract class ModelAbstractApi
     {
-        public static ModelAbstractApi Instance()
-        {
+        public abstract void create(int num);
+        public LogicAbstractApi logic;
+        public static ModelAbstractApi CreateApi() {
             return new ModelLayer();
         }
         public ObservableCollection<BallModel> ballsModel;
@@ -26,21 +27,19 @@ namespace TP.ConcurrentProgramming.PresentationModel
             set => ballsModel = value;
         }
 
-        internal class ModelLayer : ModelAbstractApi
+        private class ModelLayer : ModelAbstractApi
         {
-
             public ModelLayer()
             {
                 Balls = new ObservableCollection<BallModel>();
-                logic = logic.CreateApi(null);
+                logic = LogicAbstractApi.CreateApi(null);
                 logic.LogicApiEvent += (sender, args) => LogicApiEventHandler();
             }
-            private readonly LogicAbstractApi logic;
             public ModelLayer(LogicAbstractApi logicLayer)
             {
                 logic = logicLayer;
             }
-            public override ObservableCollection<BallModel> create(int num)
+            public override void create(int num)
             {
                 logic.create(num);
                 ballsModel.Clear();
@@ -49,12 +48,23 @@ namespace TP.ConcurrentProgramming.PresentationModel
                     BallModel model = new BallModel(logic.getX(i), logic.getY(i));
                     Balls.Add(model);
                 }
-                return ballsModel;
             }
             public override void stop()
             {
                 logic.stop();
                 ballsModel.Clear();
+            }
+            private void LogicApiEventHandler()
+            {
+
+                for (int i = 0; i < logic.getNum(); i++)
+                {
+                    if (logic.getNum() == Balls.Count)
+                    {
+                        Balls[i].XPos = logic.getX(i);
+                        Balls[i].YPos = logic.getY(i);
+                    }
+                }
             }
         }
     }

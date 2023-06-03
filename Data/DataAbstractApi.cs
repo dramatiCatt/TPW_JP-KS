@@ -32,7 +32,7 @@ namespace Data
 
     public class DataApi : DataAbstractApi
     {
-
+        private Logger _logger;
         private List<IBall> Balls { get; }
         public override int Width { get; }
         public override int Height { get; }
@@ -40,6 +40,7 @@ namespace Data
             Balls = new List<IBall>();
             Width = 400;
             Height = 800;
+            _logger = new Logger();
         }
         
         public override event EventHandler BallEvent;
@@ -56,10 +57,11 @@ namespace Data
                 for (int i = 0; i < num; i++)
                 {
                     float x, y;
+                    int id = 0; //????????????????????????????
                     x = (float)(rnd.NextDouble() * (3 + 3) - 3);
                     y = (float)(rnd.NextDouble() * (3 + 3) - 3);
                     Vector2 vel = new Vector2(x, y);
-                    Ball ball = new Ball((rnd.Next(100, 300)), rnd.Next(100, 300), 15, rnd.Next(1, 5), vel);
+                    Ball ball = new Ball((rnd.Next(100, 300)), rnd.Next(100, 300), 15, rnd.Next(1, 5), vel, id);
                     Balls.Add(ball);
                     ball.PositionChanged += Ball_PositionChanged;
                 }
@@ -71,6 +73,7 @@ namespace Data
             if (sender != null)
             {
                 BallEvent?.Invoke(sender, EventArgs.Empty);
+                _logger.addToQueue((IBall)sender);
             }
         }
         public override int getNum()

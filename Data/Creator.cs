@@ -12,6 +12,7 @@ namespace Data
             private int _x;
             private int _y;
             private int _radius = 15;
+            private int _id;
 
             public Creator() { }
 
@@ -22,6 +23,7 @@ namespace Data
                 float weight = (float)_creator.NextDouble() * 2;
                 float velX = (float)_creator.NextDouble() * (3 + 3) - 3;
                 float velY = (float)_creator.NextDouble() * (3 + 3) - 3;
+                int id = 0;  //o co chodzi?????????????????????????????????  
                 if (velX > -1 && velX < 0)
                 {
                     velX = -1;
@@ -39,7 +41,7 @@ namespace Data
                     velY = 1;
                 }
                 Vector2 velocity = new Vector2(velX, velY);
-                return new Ball(X, Y, Radius, weight, velocity);
+                return new Ball(X, Y, Radius, weight, velocity, id);
             }
 
             public int X

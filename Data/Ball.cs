@@ -5,16 +5,21 @@ using System.Threading;
 using System.Diagnostics;
 using System.Threading.Tasks;
 using System;
+using System.Text.Json;
+using System.Text.Json.Serialization;
+using Newtonsoft.Json;
 
 namespace Data
 {
     public interface IBall{
+        int ID { get; }
+        [JsonConverter(typeof(Vector2Converter))]
         Vector2 CurrentVector { get; }
-        int MoveTime { get; }
         const int Radius = 15;
+        [JsonIgnore]
         float Weight { get; }
+        [JsonConverter(typeof(Vector2Converter))]
         Vector2 Velocity { get; set; }
-        bool CanMove { get; set; }
     }
 
     internal class Ball : IBall
@@ -25,11 +30,15 @@ namespace Data
         private float _weight;
         private int _radius;
         private bool _canMove = true;
+        private Stopwatch _stopwatch;
+        public int ID { get; }
 
 
-        public Ball(float x, float y, int radius, float weight, Vector2 velocity)
+        public Ball(float x, float y, int radius, float weight, Vector2 velocity, int id)
         {
             Random rnd = new Random();
+            _stopwatch = new Stopwatch();
+            ID = id;
             _currentVector.X = x;
             _currentVector.Y = y;
             Velocity = new Vector2(x, y) {
@@ -62,15 +71,42 @@ namespace Data
         {
             Task.Run(async () =>
             {
+                int delay = 0;
                 while (true)
                 {
+                    _stopwatch.Restart();
+                    _stopwatch.Start();
                     Move();
+                    _stopwatch.Stop();
+                    if (MoveTime - _stopwatch.ElapsedMilliseconds < 0)
+                    {
+                        delay = 0;
+                    }
+                    else
+                    {
+                        delay = MoveTime - (int)_stopwatch.ElapsedMilliseconds;
+                    }
                     await Task.Delay(MoveTime);
                 }
             });
         }
 
         internal event EventHandler PositionChanged;
+        internal class Vector2Converter : JsonConverter<Vector2>
+        {
+            public override Vector2 Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+            {
+                throw new NotImplementedException();
+            }
+
+            public override void Write(Utf8JsonWriter writer, Vector2 value, JsonSerializerOptions options)
+            {
+                writer.WriteStartObject();
+                writer.WriteNumber("X", value.X);
+                writer.WriteNumber("Y", value.Y);
+                writer.WriteEndObject();
+            }
+        }
 
         internal void OnPositionChanged()
         {

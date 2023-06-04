@@ -110,16 +110,7 @@ namespace Logic
                     speed.Y = ball.Velocity.Y * (-1);
                 }
             }
-            public void checkMovement(object sender, PropertyChangedEventArgs e)
-            {
-                IBall b = (IBall)sender;
-                b.CanMove = false;
-                if (e.PropertyName == "CurrentVector")
-                {
-                    Collision(Width, Height, 15, b);
-                    b.CanMove = true;
-                }
-            }
+
             private void BallCrash(IBall b1, IBall b2)
             {
                Vector2 newVelocity1 = (b1.Velocity * (b1.Weight - b2.Weight) + b2.Velocity * 2 * b2.Weight) / (b1.Weight + b2.Weight);

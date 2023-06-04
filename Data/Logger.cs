@@ -1,6 +1,6 @@
-﻿using Newtonsoft.Json;
-using System;
+﻿using System;
 using System.Collections.Concurrent;
+using System.IO;
 using System.Text.Json;
 using System.Threading.Tasks;
 
@@ -17,7 +17,7 @@ namespace Data
         public void addToQueue(IBall ball)
         {
             string jsonString = JsonSerializer.Serialize(ball);
-            string date = DateTime.Now.ToString("MM/dd/yyyy HH:mm:ss.fff")
+            string date = DateTime.Now.ToString("MM/dd/yyyy HH:mm:ss.fff");
             string log = "{" + String.Format("\n\t\"Date\": \"{0}\",\n\t\"Info\":{1}\n", date, jsonString) + "}\n";
             _queue.Enqueue(log);
         }

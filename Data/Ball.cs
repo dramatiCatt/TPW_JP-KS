@@ -7,7 +7,6 @@ using System.Threading.Tasks;
 using System;
 using System.Text.Json;
 using System.Text.Json.Serialization;
-using Newtonsoft.Json;
 
 namespace Data
 {
@@ -92,21 +91,6 @@ namespace Data
         }
 
         internal event EventHandler PositionChanged;
-        internal class Vector2Converter : JsonConverter<Vector2>
-        {
-            public override Vector2 Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
-            {
-                throw new NotImplementedException();
-            }
-
-            public override void Write(Utf8JsonWriter writer, Vector2 value, JsonSerializerOptions options)
-            {
-                writer.WriteStartObject();
-                writer.WriteNumber("X", value.X);
-                writer.WriteNumber("Y", value.Y);
-                writer.WriteEndObject();
-            }
-        }
 
         internal void OnPositionChanged()
         {
@@ -143,6 +127,21 @@ namespace Data
         }
 
 
+    }
+    internal class Vector2Converter : JsonConverter<Vector2>
+    {
+        public override Vector2 Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override void Write(Utf8JsonWriter writer, Vector2 value, JsonSerializerOptions options)
+        {
+            writer.WriteStartObject();
+            writer.WriteNumber("X", value.X);
+            writer.WriteNumber("Y", value.Y);
+            writer.WriteEndObject();
+        }
     }
 
 }

@@ -1,68 +1,53 @@
-﻿using Data;
-using Logic;
+﻿using Logic;
 using System.Collections.ObjectModel;
-using System.Reflection;
 
 
 namespace TP.ConcurrentProgramming.PresentationModel
 {
     public abstract class ModelAbstractApi
     {
-        public abstract void create(int num);
         public LogicAbstractApi logic;
         public static ModelAbstractApi CreateApi() {
             return new ModelLayer();
         }
-        public ObservableCollection<BallModel> ballsModel;
-        public static ModelAbstractApi CreateApi(LogicAbstractApi logicApi = default)
-        {
-            return new ModelLayer(logicApi ?? LogicAbstractApi.CreateApi());
-        }
-        public ObservableCollection<BallModel> Balls;
-        public abstract void stop();
 
-        public ObservableCollection<BallModel> BallsModel
-        {
-            get => ballsModel;
-            set => ballsModel = value;
-        }
+        public ObservableCollection<BallModel> balls;
+        public abstract void stop();
+        public abstract void create(int num);
 
         private class ModelLayer : ModelAbstractApi
         {
             public ModelLayer()
             {
-                Balls = new ObservableCollection<BallModel>();
+                balls = new ObservableCollection<BallModel>();
                 logic = LogicAbstractApi.CreateApi(null);
                 logic.LogicApiEvent += (sender, args) => LogicApiEventHandler();
             }
-            public ModelLayer(LogicAbstractApi logicLayer)
-            {
-                logic = logicLayer;
-            }
+
             public override void create(int num)
             {
                 logic.create(num);
-                ballsModel.Clear();
+                balls.Clear();
                 for(int i = 0; i < num; i++)
                 {
                     BallModel model = new BallModel(logic.getX(i), logic.getY(i));
-                    Balls.Add(model);
+                    balls.Add(model);
                 }
             }
             public override void stop()
             {
                 logic.stop();
-                ballsModel.Clear();
+                balls.Clear();
             }
             private void LogicApiEventHandler()
             {
 
                 for (int i = 0; i < logic.getNum(); i++)
                 {
-                    if (logic.getNum() == Balls.Count)
+                    if (logic.getNum() == balls.Count)
                     {
-                        Balls[i].XPos = logic.getX(i);
-                        Balls[i].YPos = logic.getY(i);
+                        balls[i].XPos = logic.getX(i);
+                        balls[i].YPos = logic.getY(i);
                     }
                 }
             }

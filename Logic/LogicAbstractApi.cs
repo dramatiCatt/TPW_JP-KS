@@ -1,17 +1,11 @@
 ﻿using Data;
 using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.ComponentModel;
 using System.Numerics;
-using System.Threading;
-using System.Diagnostics;
 
 namespace Logic
 {
     public abstract class LogicAbstractApi
     {
-        //public List<LogicBall> ballOperators;
         public abstract void create(int num);
         public abstract void stop();
         public abstract int getNum();
@@ -21,14 +15,14 @@ namespace Logic
         public static LogicAbstractApi CreateApi(DataAbstractApi data = default)
         {
             return new LogicApi(data ?? DataAbstractApi.CreateApi());
-        }//logicapi 13
+        }
         public static int _width = 800;
         public static int _height = 400;
         public static int _radius = 15;
         private class LogicApi : LogicAbstractApi
         {
-            private readonly DataAbstractApi data;//nie readonly
-
+            DataAbstractApi data;
+            object _lock = new object();
             public LogicApi(DataAbstractApi dataAbstractApi)
             {
                 data = dataAbstractApi;
@@ -38,14 +32,7 @@ namespace Logic
             public override void create(int num)
             {
                 data.create(num);  
-            }
-            private int _width;
-            private int _height;
-            private int _radius;
-            object _lock = new object();
-            public int Width { get => _width; }
-            public int Height { get => _height; }
-            public int Radius { get => _radius; }   
+            } 
             public override void stop() => data.stop();
             public override int getNum()
             {
@@ -73,7 +60,7 @@ namespace Logic
             public async void Collision(int width, int height, int radius, IBall ball)
             {
                 Vector2 speed = new Vector2(ball.Velocity.X, ball.Velocity.Y);
-                lock (_lock)
+                lock(_lock)
                 {
                     for (int i = 0; i < data.getNum(); i++)
                     {

@@ -1,10 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Collections.ObjectModel;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 using System.Numerics;
 
 namespace Data
@@ -20,8 +15,6 @@ namespace Data
         public abstract int getNum();
         public abstract int Width { get; }
         public abstract int Height { get; }
-
-        public Creator _creator = new Creator();
         public abstract float getX(int number);
         public abstract float getY(int number);
         public abstract IBall GetBall(int num);
@@ -53,15 +46,15 @@ namespace Data
         {
             if (num > 0)
             {
-                Random rnd = new Random();  
+                Random rnd = new Random();
+                int counter = Balls.Count;
                 for (int i = 0; i < num; i++)
                 {
                     float x, y;
-                    int id = 0; //????????????????????????????
                     x = (float)(rnd.NextDouble() * (3 + 3) - 3);
                     y = (float)(rnd.NextDouble() * (3 + 3) - 3);
                     Vector2 vel = new Vector2(x, y);
-                    Ball ball = new Ball((rnd.Next(100, 300)), rnd.Next(100, 300), 15, rnd.Next(1, 5), vel, id);
+                    Ball ball = new Ball((rnd.Next(100, 300)), rnd.Next(100, 300), 15, rnd.Next(1, 5), vel, i + counter);
                     Balls.Add(ball);
                     ball.PositionChanged += Ball_PositionChanged;
                 }
@@ -73,7 +66,6 @@ namespace Data
             if (sender != null)
             {
                 BallEvent?.Invoke(sender, EventArgs.Empty);
-                _logger.addToQueue((IBall)sender);
             }
         }
         public override int getNum()

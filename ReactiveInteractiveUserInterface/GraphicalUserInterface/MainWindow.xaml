@@ -17,7 +17,7 @@
             <TextBlock Canvas.Left="304" Canvas.Top="100" TextAlignment="Left" FontSize="20" Height="30" Width="110" Text="Ilosc kulek:" HorizontalAlignment="Left" VerticalAlignment="Center" FontFamily="Century Gothic" FontWeight="UltraBold"/>
             
             <!-- Pole do wpisania-->
-            <TextBox Canvas.Left="450" Canvas.Top="100" TextAlignment="Left" FontSize="20" Height="30" Width="100" Text="{Binding BallsNum}" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+            <TextBox Canvas.Left="450" Canvas.Top="100" TextAlignment="Left" FontSize="20" Height="30" Width="100" Text="{Binding numBalls}" HorizontalAlignment="Left" VerticalAlignment="Center"/>
 
             <!-- Przycisk do startowania-->
             <Button Canvas.Left="610" Canvas.Top="100" Height="30" Width="100" Content="Start" Command="{Binding StartClick}" HorizontalAlignment="Left" VerticalAlignment="Center"  Background="#80CFA9" FontFamily="Century Gothic" FontWeight="UltraBold"/>
@@ -25,12 +25,12 @@
             <!-- Przycisk do konczenia-->
             <Button Canvas.Left="450" Canvas.Top="646" Height="30" Width="100" Content="Stop" Command="{Binding StopClick}" Background="#D4C5E2" FontFamily="Century Gothic" FontWeight="UltraBold"/>
 
-            <Canvas Canvas.Left="100" Canvas.Top="200" Height='{Binding Height}' Width='{Binding Width}'>
+            <Canvas Canvas.Left="100" Canvas.Top="200" Height='800' Width='1000'>
                 <!-- Prostokat-->
                 <Rectangle Canvas.Left="13" Canvas.Top="7" Height='396' Width='790' StrokeThickness="6" Stroke="#4C6663" HorizontalAlignment="Center" VerticalAlignment="Top"/>
 
                 <!-- pilki -->
-                <ItemsControl ItemsSource="{Binding Balls, UpdateSourceTrigger=PropertyChanged}">
+                <ItemsControl ItemsSource="{Binding balls, UpdateSourceTrigger=PropertyChanged}">
                     <ItemsControl.ItemsPanel>
                         <ItemsPanelTemplate>
                             <Canvas/>
@@ -44,7 +44,7 @@
                     </ItemsControl.ItemContainerStyle>
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
-                            <Ellipse Width="{Binding Diameter}" Height="{Binding Diameter}" Fill="MediumPurple"/>
+                            <Ellipse Width="{Binding Radius}" Height="{Binding Radius}" Fill="MediumPurple"/>
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>
                 </ItemsControl>

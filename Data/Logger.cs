@@ -1,48 +1,38 @@
 ﻿using System;
-using System.Collections.Concurrent;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Text.Json;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Data
 {
     internal class Logger
     {
-        ConcurrentQueue<string> _queue;
         public Logger() {
-            _queue = new ConcurrentQueue<string>();
             WriteToFile();
         }
 
-        public void addToQueue(IBall ball)
-        {
-            string jsonString = JsonSerializer.Serialize(ball);
-            string date = DateTime.Now.ToString("MM/dd/yyyy HH:mm:ss.fff");
-            string log = "{" + String.Format("\n\t\"Date\": \"{0}\",\n\t\"Info\":{1}\n", date, jsonString) + "}\n";
-            _queue.Enqueue(log);
-        }
-
+        string fileName = "logs.json";
+        private object _lockFile = new object();
+        CancellationToken token;
+        private ObservableCollection<Ball> _balls = new ObservableCollection<Ball>();
         private void WriteToFile() {
             Task.Run(async () =>
             {
-                using StreamWriter _writer = new StreamWriter("logs.json");
+                System.IO.File.WriteAllText(fileName, string.Empty);
                 while (true)
                 {
-                    if (_queue.Count > 0)
+                    var options = new JsonSerializerOptions { WriteIndented = true };
+                    string jsonString = JsonSerializer.Serialize(_balls, options);
+                    string jsonString2 = "[ \"Date/Time\": \"" + DateTime.Now.ToString() + "\",\n  \"Balls\": " + jsonString + " ]\n";
+                    lock (_lockFile)
                     {
-                        while (!_queue.IsEmpty)
-                        {
-                            if (_queue.TryDequeue(out string item))
-                            {
-                                _writer.WriteLine(item);
-                            }
-                        }
-                        await _writer.FlushAsync();
+                        File.AppendAllText(fileName, jsonString2);
                     }
-                    else
-                    {
-                        await Task.Delay(100);
-                    }
+                    try { token.ThrowIfCancellationRequested(); }
+                    catch (System.OperationCanceledException) { break; }
+                    await Task.Delay(2000);
                 }
             });
         }

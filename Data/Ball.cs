@@ -1,7 +1,4 @@
-﻿using System.ComponentModel;
-using System.Numerics;
-using System.Runtime.CompilerServices;
-using System.Threading;
+﻿using System.Numerics;
 using System.Diagnostics;
 using System.Threading.Tasks;
 using System;
@@ -28,7 +25,6 @@ namespace Data
         private Vector2 _velocity;
         private float _weight;
         private int _radius;
-        private bool _canMove = true;
         private Stopwatch _stopwatch;
         public int ID { get; }
 
@@ -44,7 +40,11 @@ namespace Data
                 X = (float)(rnd.NextDouble() * (3 + 3) - 3),
                 Y = (float)(rnd.NextDouble() * (3 + 3) - 3)
             };
-            //position tu ?
+            CurrentVector = new Vector2(x, y)
+            {
+                X = x,
+                Y = y
+            };
             _radius = radius;
             _weight = weight;
             _velocity = velocity;
@@ -52,9 +52,9 @@ namespace Data
             RunTask();
         }
 
-        public int MoveTime {
+        private int MoveTime {
             get => _moveTime;
-            private set
+            set
             {
                 _moveTime = value;
             }
@@ -115,17 +115,6 @@ namespace Data
                 _weight = value;
             }
         }
-        public int Radius
-        {
-            get => _radius;
-        }
-
-        public bool CanMove
-        {
-            get => _canMove;
-            set { _canMove = value; }
-        }
-
 
     }
     internal class Vector2Converter : JsonConverter<Vector2>
